@@ -62,6 +62,14 @@ export function actorImmunityValues(actor) {
   return toArrayValue(actor?.system?.traits?.di?.value);
 }
 
+export function actorVulnerabilityValues(actor) {
+  return toArrayValue(actor?.system?.traits?.dv?.value);
+}
+
+export function actorVulnerableTo(actor, damageType) {
+  return actorVulnerabilityValues(actor).includes(damageType);
+}
+
 export function actorAlreadyResists(actor, damageType) {
   return actorResistanceValues(actor).includes(damageType);
 }

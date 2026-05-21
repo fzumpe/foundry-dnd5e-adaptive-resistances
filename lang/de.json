@@ -70,5 +70,13 @@
   "ADR.Features.Single.slashing.Name": "Adaptive Resistenz: Hieb",
   "ADR.Features.Single.slashing.Description": "Das Wesen passt sich an Hiebschaden an, sobald dieser tatsächlich durch seine Abwehr dringt.",
   "ADR.Features.Single.thunder.Name": "Adaptive Resistenz: Donner",
-  "ADR.Features.Single.thunder.Description": "Das Wesen passt sich an Donnerschaden an, sobald dieser tatsächlich durch seine Abwehr dringt."
+  "ADR.Features.Single.thunder.Description": "Das Wesen passt sich an Donnerschaden an, sobald dieser tatsächlich durch seine Abwehr dringt.",
+  "ADR.Features.Set.NonProfane.Name": "Nicht-Profan",
+  "ADR.Features.Set.NonProfane.Description": "Das Wesen passt sich an Schaden an, der nicht aus einfacher körperlicher Gewalt entsteht: Säure, Kälte, Feuer, Energie, Blitz, nekrotisch, Gift, psychisch, gleißend und Donner.",
+  "ADR.Features.Set.All.Name": "Alle Schadensarten",
+  "ADR.Features.Set.All.Description": "Das Wesen passt sich an jede registrierte dnd5e-Schadensart an, sofern der Schaden tatsächlich durch seine Abwehr dringt.",
+  "ADR.Features.NonProfane.Name": "Adaptive Resistenz: Nicht-Profan",
+  "ADR.Features.NonProfane.Description": "Das Wesen passt sich an Schaden an, der nicht aus einfacher körperlicher Gewalt entsteht: Säure, Kälte, Feuer, Energie, Blitz, nekrotisch, Gift, psychisch, gleißend und Donner.",
+  "ADR.Features.All.Name": "Adaptive Resistenz: Alle Schadensarten",
+  "ADR.Features.All.Description": "Das Wesen passt sich an jede registrierte dnd5e-Schadensart an, sofern der Schaden tatsächlich durch seine Abwehr dringt."
 }

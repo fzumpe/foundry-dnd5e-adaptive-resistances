@@ -37,6 +37,14 @@ const ENGLISH_SET_TEXT = Object.freeze({
     name: "Profane",
     description: "The creature adapts to bodily violence from bludgeoning, piercing, and slashing harm. This follows the dnd5e damage types and does not reliably distinguish magical from nonmagical weapons."
   },
+  nonProfane: {
+    name: "Non-Profane",
+    description: "The creature adapts to damage that is not simple bodily violence: acid, cold, fire, force, lightning, necrotic, poison, psychic, radiant, and thunder."
+  },
+  all: {
+    name: "All Damage",
+    description: "The creature adapts to any registered dnd5e damage type as long as the damage truly pierces its defenses."
+  },
   acid: {
     name: "Acid",
     description: "The creature adapts to acid damage once it truly pierces its defenses."

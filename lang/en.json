@@ -70,5 +70,13 @@
   "ADR.Features.Single.slashing.Name": "Adaptive Resistance: Slashing",
   "ADR.Features.Single.slashing.Description": "The creature adapts to slashing damage once it truly pierces its defenses.",
   "ADR.Features.Single.thunder.Name": "Adaptive Resistance: Thunder",
-  "ADR.Features.Single.thunder.Description": "The creature adapts to thunder damage once it truly pierces its defenses."
+  "ADR.Features.Single.thunder.Description": "The creature adapts to thunder damage once it truly pierces its defenses.",
+  "ADR.Features.Set.NonProfane.Name": "Non-Profane",
+  "ADR.Features.Set.NonProfane.Description": "The creature adapts to damage that is not simple bodily violence: acid, cold, fire, force, lightning, necrotic, poison, psychic, radiant, and thunder.",
+  "ADR.Features.Set.All.Name": "All Damage",
+  "ADR.Features.Set.All.Description": "The creature adapts to any registered dnd5e damage type as long as the damage truly pierces its defenses.",
+  "ADR.Features.NonProfane.Name": "Adaptive Resistance: Non-Profane",
+  "ADR.Features.NonProfane.Description": "The creature adapts to damage that is not simple bodily violence: acid, cold, fire, force, lightning, necrotic, poison, psychic, radiant, and thunder.",
+  "ADR.Features.All.Name": "Adaptive Resistance: All Damage",
+  "ADR.Features.All.Description": "The creature adapts to any registered dnd5e damage type as long as the damage truly pierces its defenses."
 }

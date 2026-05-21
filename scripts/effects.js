@@ -1,4 +1,11 @@
-import { MODULE_ID, EFFECT_FLAG, ADAPTATION_CONFIG, ADAPTATION_TYPES } from "./constants.js";
+import {
+  MODULE_ID,
+  EFFECT_FLAG,
+  ADAPTATION_CONFIG,
+  ADAPTATION_TYPES,
+  PROFANE_DAMAGE_TYPES,
+  PROFANE_BYPASSES
+} from "./constants.js";
 import { getDamageTypeLabel } from "./utils.js";
 
 export async function removeOldAdaptiveEffects(actor) {
@@ -6,6 +13,32 @@ export async function removeOldAdaptiveEffects(actor) {
   if (!oldEffects.length) return;
 
   await actor.deleteEmbeddedDocuments("ActiveEffect", oldEffects.map(effect => effect.id));
+}
+
+function getAdaptiveChanges(config, damageType) {
+  const changes = [
+    {
+      key: config.traitKey,
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: damageType,
+      priority: 20
+    }
+  ];
+
+  if (PROFANE_DAMAGE_TYPES.includes(damageType)) {
+    const bypassKey = config.traitKey.replace(/\.value$/, ".bypasses");
+
+    for (const bypass of PROFANE_BYPASSES) {
+      changes.push({
+        key: bypassKey,
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: bypass,
+        priority: 20
+      });
+    }
+  }
+
+  return changes;
 }
 
 export async function createAdaptiveEffect(actor, damageType, adaptationType = ADAPTATION_TYPES.RESISTANCE) {
@@ -26,14 +59,7 @@ export async function createAdaptiveEffect(actor, damageType, adaptationType = A
           }
         }
       },
-      changes: [
-        {
-          key: config.traitKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-          value: damageType,
-          priority: 20
-        }
-      ]
+      changes: getAdaptiveChanges(config, damageType)
     }
   ]);
 }

@@ -4,6 +4,9 @@ export const PACK_ID = `${MODULE_ID}.${PACK_NAME}`;
 export const FEATURE_FLAG = "adaptiveResistanceFeature";
 export const EFFECT_FLAG = "adaptiveResistanceEffect";
 
+export const PROFANE_DAMAGE_TYPES = Object.freeze(["bludgeoning", "piercing", "slashing"]);
+export const PROFANE_BYPASSES = Object.freeze(["ada", "mgc", "sil"]);
+
 export const ADAPTATION_TYPES = Object.freeze({
   RESISTANCE: "resistance",
   IMMUNITY: "immunity"
@@ -64,6 +67,18 @@ export const DAMAGE_SETS = Object.freeze({
     nameKey: "ADR.Features.Set.Profane.Name",
     descriptionKey: "ADR.Features.Set.Profane.Description",
     damageTypes: ["bludgeoning", "piercing", "slashing"]
+  },
+  nonProfane: {
+    id: "nonProfane",
+    nameKey: "ADR.Features.Set.NonProfane.Name",
+    descriptionKey: "ADR.Features.Set.NonProfane.Description",
+    damageTypes: ["acid", "cold", "fire", "force", "lightning", "necrotic", "poison", "psychic", "radiant", "thunder"]
+  },
+  all: {
+    id: "all",
+    nameKey: "ADR.Features.Set.All.Name",
+    descriptionKey: "ADR.Features.Set.All.Description",
+    damageTypes: ["acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"]
   },
   acid: {
     id: "acid",

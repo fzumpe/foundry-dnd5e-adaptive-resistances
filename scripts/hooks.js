@@ -1,6 +1,7 @@
 import { MODULE_ID } from "./constants.js";
 import {
   actorAlreadyProtected,
+  actorVulnerableTo,
   getAdaptiveFeatureItems,
   getCandidatesForActor,
   getDominantDamageCandidate,
@@ -28,6 +29,15 @@ Hooks.on("dnd5e.preCalculateDamage", (actor, damages, options = {}) => {
     storeDamageSelection(options, {
       skip: true,
       reason: "damage-already-reduced-or-prevented"
+    });
+    return;
+  }
+
+  const vulnerable = candidates.some(candidate => actorVulnerableTo(actor, candidate.type));
+  if (vulnerable) {
+    storeDamageSelection(options, {
+      skip: true,
+      reason: "damage-has-vulnerability"
     });
     return;
   }
