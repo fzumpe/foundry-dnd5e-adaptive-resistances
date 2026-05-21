@@ -54,6 +54,6 @@
     }
   ],
   "url": "https://github.com/fzumpe/foundry-dnd5e-adaptive-resistances",
-  "manifest": "https://raw.githubusercontent.com/fzumpe/foundry-dnd5e-adaptive-resistances/refs/heads/V1.0.0/module.json",
+  "manifest": "https://raw.githubusercontent.com/fzumpe/foundry-dnd5e-adaptive-resistances/refs/tags/V1.0.0/module.json",
   "download": "https://github.com/fzumpe/foundry-dnd5e-adaptive-resistances/archive/refs/tags/V1.0.0.zip"
 }
