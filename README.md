@@ -1,12 +1,12 @@
-
 # Adaptive Damage Resistance
+
 Adaptive Damage Resistance is a small module for Foundry VTT and the Dungeons & Dragons 5e system.
 
 It adds features that allow creatures to adapt to the damage they suffer. After a creature is hit and actually takes damage, it can gain a temporary resistance or immunity against that damage type. When it is later damaged by another matching damage type, the previous adaptation is replaced.
 
-´<img src="adaptive-resistances.gif" />
+<img src="adaptive-resistances.gif" alt="Adaptive Damage Resistance demo" />
 
-## Inhaltsverzeichnis
+## Table of Contents
 
 - [What the module does](#what-the-module-does)
 - [Included feature groups](#included-feature-groups)
@@ -18,6 +18,7 @@ It adds features that allow creatures to adapt to the damage they suffer. After 
 - [Repository](#repository)
 
 ## What the module does
+
 The module adds a compendium with ready-to-use features. You can drag these features onto any actor that should gain adaptive protection.
 
 There are two kinds of adaptive protection:
@@ -30,19 +31,35 @@ Each kind is available for different groups of damage types.
 ## Included feature groups
 
 ### Elemental
+
 The creature adapts to elemental damage types such as fire, cold, acid, lightning, and thunder.
 
 ### Magical
+
 The creature adapts to more supernatural damage types such as force, necrotic, psychic, and radiant damage.
 
 ### Profane
+
 The creature adapts to physical weapon damage types such as bludgeoning, piercing, and slashing.
-This does not check whether a weapon is magical or non-magical. It only reacts to the damage type itself.
+
+This does not check whether a weapon is magical or non-magical. It only reacts to the damage type itself. For profane damage, the created resistance or immunity can be bypassed by magical, silvered, or adamantine weapons.
+
+### Non-Profane
+
+The creature adapts to all damage types except profane weapon damage.
+
+This includes damage types such as fire, cold, acid, force, necrotic, poison, psychic, radiant, lightning, and thunder.
+
+### All Damage
+
+The creature can adapt to any supported damage type.
 
 ### Single damage types
+
 The module also includes one feature for each individual damage type. These can be used when a creature should only adapt to one specific kind of damage.
 
 ## How to use
+
 1. Enable the module in your world.
 2. Open the compendium **Adaptive Damage Resistance Features**.
 3. Drag one of the adaptive features onto an actor.
@@ -51,6 +68,7 @@ The module also includes one feature for each individual damage type. These can 
 When the actor takes valid damage, the matching resistance or immunity is added automatically.
 
 ## Important behavior
+
 The adaptation only happens when damage is actually dealt.
 
 It does not trigger if:
@@ -58,11 +76,13 @@ It does not trigger if:
 - no damage is applied,
 - the damage is reduced to 0,
 - the creature was already resistant or immune to that damage type,
+- the creature is vulnerable to that damage type,
 - the damage type does not match the feature on the actor.
 
 The new resistance or immunity is applied after the triggering hit. It does not protect against the same hit that caused it.
 
 ## Examples
+
 A creature has **Adaptive Resistance: Elemental**.
 
 It is hit by fire damage and takes damage.  
@@ -78,19 +98,17 @@ It gains immunity to fire damage.
 
 If the same creature is later hit by cold damage, nothing changes because the feature only reacts to fire damage.
 
+A creature has **Adaptive Resistance: All Damage**.
+
+It is hit by slashing damage and takes damage.  
+It gains resistance to slashing damage.
+
+Later, it is hit by necrotic damage and takes damage.  
+The slashing resistance is replaced with necrotic resistance.
+
 ## Installation
+
 Use the manifest URL from the latest release:
 
 ```txt
 https://github.com/fzumpe/foundry-dnd5e-adaptive-resistances/releases/latest/download/module.json
-```
-Or download the ZIP file from the release page and install it manually into your Foundry VTT modules folder.
-
-## Compatibility
-This module is intended for:
-
-Foundry VTT 14
-dnd5e 5.3.3
-
-## Repository
-https://github.com/fzumpe/foundry-dnd5e-adaptive-resistances
