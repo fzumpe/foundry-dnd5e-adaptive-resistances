@@ -4,7 +4,7 @@ Adaptive Damage Resistance is a small module for Foundry VTT and the Dungeons & 
 
 It adds features that allow creatures to adapt to the damage they suffer. After a creature is hit and actually takes damage, it can gain a temporary resistance or immunity against that damage type. When it is later damaged by another matching damage type, the previous adaptation is replaced.
 
-<video src="adaptive-resistances.webm" controls width="720"></video>
+´<img src="adaptive-resistances.gif" />
 
 ## Inhaltsverzeichnis
 
