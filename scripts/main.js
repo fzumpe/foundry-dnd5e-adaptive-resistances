@@ -1,5 +1,15 @@
-import { MODULE_ID } from "./constants.js";
-import { seedFeatureCompendium } from "./features.js";
+import {
+  MODULE_ID
+} from "./constants.js";
+
+import {
+  seedFeatureCompendium
+} from "./features.js";
+
+import {
+  migrateWorldActorFeatureItems
+} from "./migrations.js";
+
 import "./hooks.js";
 
 Hooks.once("init", () => {
@@ -8,4 +18,5 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", async () => {
   await seedFeatureCompendium();
+  await migrateWorldActorFeatureItems();
 });

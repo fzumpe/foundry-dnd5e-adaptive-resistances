@@ -1,6 +1,6 @@
 import {
   MODULE_ID,
-  FEATURE_FLAG,
+  TRIGGER_FLAG,
   DAMAGE_SETS,
   ADAPTATION_TYPES,
   ADAPTATION_CONFIG
@@ -16,8 +16,13 @@ export function localize(key) {
 
 export function getDamageTypeLabel(type) {
   const configured = CONFIG.DND5E?.damageTypes?.[type];
+
   if (!configured) return type;
-  if (typeof configured === "string") return game.i18n.localize(configured);
+
+  if (typeof configured === "string") {
+    return game.i18n.localize(configured);
+  }
+
   return game.i18n.localize(configured.label ?? type);
 }
 
@@ -35,22 +40,40 @@ export function getDamageValue(damage) {
   ];
 
   for (const value of candidates) {
-    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
   }
 
   return 0;
 }
 
 export function getDamageType(damage) {
-  return damage?.type ?? damage?.damageType ?? damage?.application?.type ?? null;
+  return damage?.type
+    ?? damage?.damageType
+    ?? damage?.application?.type
+    ?? null;
 }
 
 export function toArrayValue(value) {
   if (!value) return [];
-  if (Array.isArray(value)) return value;
-  if (value instanceof Set) return Array.from(value);
-  if (typeof value === "object") return Object.keys(value).filter(key => value[key]);
-  if (typeof value === "string") return [value];
+
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (value instanceof Set) {
+    return Array.from(value);
+  }
+
+  if (typeof value === "object") {
+    return Object.keys(value).filter(key => value[key]);
+  }
+
+  if (typeof value === "string") {
+    return [value];
+  }
+
   return [];
 }
 
@@ -79,32 +102,63 @@ export function actorAlreadyImmune(actor, damageType) {
 }
 
 export function actorAlreadyProtected(actor, damageType) {
-  return actorAlreadyResists(actor, damageType) || actorAlreadyImmune(actor, damageType);
+  return actorAlreadyResists(actor, damageType)
+    || actorAlreadyImmune(actor, damageType);
 }
 
-export function getAdaptiveFeatureItems(actor) {
-  if (!actor?.items) return [];
+/**
+ * Liefert alle aktuell auf den Actor angewendeten Marker-Effects.
+ *
+ * Hierdurch funktionieren sowohl:
+ * - Feature-Items auf dem Actor,
+ * - transferierende Effekte von Ausrüstung,
+ * - transferierende Effekte von attuned Items,
+ * - direkt auf den Actor gesetzte Marker-Effects.
+ */
+export function getAdaptiveTriggerEffects(actor) {
+  if (!actor) return [];
 
-  return actor.items.filter(item => {
-    const flag = item.getFlag(MODULE_ID, FEATURE_FLAG);
-    const adaptationType = flag?.adaptationType ?? ADAPTATION_TYPES.RESISTANCE;
-    return flag?.enabled === true && DAMAGE_SETS[flag?.setId] && ADAPTATION_CONFIG[adaptationType];
+  return Array.from(actor.appliedEffects ?? []).filter(effect => {
+    const trigger = effect.getFlag(MODULE_ID, TRIGGER_FLAG);
+    const adaptationType =
+      trigger?.adaptationType ?? ADAPTATION_TYPES.RESISTANCE;
+
+    return trigger?.enabled === true
+      && DAMAGE_SETS[trigger?.setId]
+      && ADAPTATION_CONFIG[adaptationType];
   });
 }
 
+/**
+ * Prüft, ob eine konkrete adaptive Quelle weiterhin auf dem Actor angewendet wird.
+ */
+export function isAdaptiveTriggerApplied(actor, effectUuid) {
+  if (!effectUuid) return false;
+
+  return getAdaptiveTriggerEffects(actor).some(
+    effect => effect.uuid === effectUuid
+  );
+}
+
+/**
+ * Bereitet aus den aktuell angewendeten Marker-Effects alle erlaubten
+ * Schadenstyp-/Adaptationstyp-Kombinationen auf.
+ */
 export function getAllowedAdaptationsForActor(actor) {
   const result = [];
 
-  for (const item of getAdaptiveFeatureItems(actor)) {
-    const flag = item.getFlag(MODULE_ID, FEATURE_FLAG);
-    const set = DAMAGE_SETS[flag.setId];
-    const adaptationType = flag.adaptationType ?? ADAPTATION_TYPES.RESISTANCE;
+  for (const effect of getAdaptiveTriggerEffects(actor)) {
+    const trigger = effect.getFlag(MODULE_ID, TRIGGER_FLAG);
+    const set = DAMAGE_SETS[trigger.setId];
+    const adaptationType =
+      trigger.adaptationType ?? ADAPTATION_TYPES.RESISTANCE;
 
     for (const damageType of set.damageTypes) {
       result.push({
         damageType,
         adaptationType,
-        priority: ADAPTATION_CONFIG[adaptationType].priority
+        priority: ADAPTATION_CONFIG[adaptationType].priority,
+        sourceEffectUuid: effect.uuid
       });
     }
   }
@@ -112,38 +166,49 @@ export function getAllowedAdaptationsForActor(actor) {
   return result;
 }
 
+/**
+ * Ermittelt die tatsächlich für den Treffer in Frage kommenden
+ * adaptiven Schadensreaktionen.
+ */
 export function getCandidatesForActor(actor, damages) {
   const allowed = getAllowedAdaptationsForActor(actor);
-  if (!allowed.length || !Array.isArray(damages)) return [];
+
+  if (!allowed.length || !Array.isArray(damages)) {
+    return [];
+  }
 
   return damages
     .map(damage => ({
       type: getDamageType(damage),
       value: getDamageValue(damage)
     }))
-    .filter(damage => {
-      if (!damage.type) return false;
-      if (damage.value <= 0) return false;
-      return true;
-    })
-    .flatMap(damage => {
-      return allowed
-        .filter(entry => entry.damageType === damage.type)
-        .map(entry => ({
-          type: damage.type,
-          value: damage.value,
-          adaptationType: entry.adaptationType,
-          priority: entry.priority
-        }));
-    });
+    .filter(damage => damage.type && damage.value > 0)
+    .flatMap(damage => allowed
+      .filter(entry => entry.damageType === damage.type)
+      .map(entry => ({
+        type: damage.type,
+        value: damage.value,
+        adaptationType: entry.adaptationType,
+        priority: entry.priority,
+        sourceEffectUuid: entry.sourceEffectUuid
+      }))
+    );
 }
 
+/**
+ * Bei mehreren passenden Schadenstypen gewinnt zunächst der höchste Schaden.
+ * Bei Gleichstand gewinnt Immunität vor Resistenz über deren höhere Priorität.
+ */
 export function getDominantDamageCandidate(candidates) {
   if (!candidates?.length) return null;
 
   return [...candidates].sort((a, b) => {
     const valueDifference = b.value - a.value;
-    if (valueDifference !== 0) return valueDifference;
+
+    if (valueDifference !== 0) {
+      return valueDifference;
+    }
+
     return b.priority - a.priority;
   })[0];
 }
